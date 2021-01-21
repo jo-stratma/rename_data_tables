@@ -1,6 +1,15 @@
 ### Shiny App tutorial from 
 # https://shiny.rstudio.com/tutorial/
 
+#### This script will allow to present data from a correlation matrix in a 
+# Network, in which the nodes can be manually selected, added and removed
+# instead of presenting all the data at ones in a network. 
+# Presenting all data from large data sets might not give a clear picture of 
+# potentially interesting connections, hence with this script, specific nodes can 
+# be selected for a network. 
+# This script is supposed to be an example, and can be modified according to the data 
+# layout of your own data in terms of column name, column numbers and so on ...   
+
 R
 library(shiny)
 library(visNetwork)
@@ -11,13 +20,18 @@ library(igraph)
 library(DT)
 library(shinythemes)
 
-# Load the data you want to visualize in a network 
-dat <- fread('path/to/regulons.txt')
+# create a test data set 
+dat <- data.frame(
+  tf=c("A","B", "C", "D","E", "F", "G","H", "I", "J"),
+  target=sample(c('k','l','m'), size=10, replace=T), 
+  correlation=runif(n=10, min= 0, max=1),
+  p_value=runif(n=10, min= 0, max=.06))
+
 
 # build the shiny app 
 #####
 ui <- fluidPage( theme = shinytheme("united"),
-titlePanel("Regulon Data Pancreas E12.5"),
+titlePanel("Test Network"),
   sidebarLayout( 
     sidebarPanel(width=2,  
     selectInput('tf', "Transcription Factor:", choice=dat$tf, multiple=T),
